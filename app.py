@@ -1,1 +1,11 @@
-# Here I am going to start to make my final project
+from flask import Flask
+
+# Configure application
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return "Hello, world" 
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
