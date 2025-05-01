@@ -13,8 +13,9 @@
     <!-- Link CSS sheet -->
     <link rel="stylesheet" href="/static/styles.css">
 
-    <title>Momentum</title>
+    <title>ProHabit: {% block title %}{% endblock %}</title>
 </head>
+
 
 <body>
     <!-- Responsive navbar structure -->
@@ -29,6 +30,7 @@
           
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
+            <!-- IF... -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#">Add Habit</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Progress</a></li>
@@ -38,10 +40,13 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#">Log out</a></li>
             </ul>
+            <!-- ELSE... -->
 
           </div>
         </div>
     </nav>
+
+
 </body>
 
 </html>
