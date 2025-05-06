@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <!-- Structure of the registration format -->
+    <form action="/register" method="POST" id="register_form">
+    
+        <div class="alert alert-danger text-center d-none" id="error_message"></div>
+        
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+            <p id="error_message"></p>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirmation" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>    
+    </form>
+
+    <!-- Error validation logic with alert messages -->
+    <script>
+        document.getElementById("register_form").addEventListener("submit", function(event) {
+            let username = document.getElementById("username").value.trim();
+            let password = document.getElementById("password").value.trim();
+            let confirmation = document.getElementById("confirmation").value.trim();
+            let error_message = document.getElementById("error_message");
+
+            error_message.classList.add("d-none");
+            error_message.innerHTML = "";
+
+            if (username === "")
+            {
+                error_message.innerHTML = "⚠️<strong>Error</strong>: You must enter a <strong>username</strong> to register"
+                error_message.classList.remove("d-none");
+                event.preventDefault();
+            }
+            else if (password === "")
+            {
+                error_message.innerHTML = "⚠️<strong>Error</strong>: You must enter a <strong>password</strong> to register"
+                error_message.classList.remove("d-none")
+                event.preventDefault();
+            }
+            else if (confirmation === "")
+            {
+                error_message.innerHTML = "⚠️<strong>Error</strong>: You must enter the <strong>password confirmation</strong> to register"
+                error_message.classList.remove("d-none")
+                event.preventDefault();
+            }
+            else if (password !== confirmation)
+            {
+                error_message.innerHTML = "<strong>Passwords do not match</strong>"
+                error_message.classList.remove("d-none");
+                event.preventDefault();
+            }
+        })
+    </script>
+{% endblock %}

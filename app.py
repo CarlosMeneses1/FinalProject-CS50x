@@ -22,11 +22,34 @@ def index():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return "TODO"
+    """ Register a new user """
+
+     # User reached route via POST (as by submitting a register from via POST)
+    if request.method == "POST":
+
+        # Get the information from a new user
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        # Validar si existe el usuario en la base de datos
+
+        # Ingresar al usuario en la base de datos
+
+        # Log In
+
+
+        return redirect("/login")
+
+    else:
+        return render_template("register.html")
+
+
+
+    
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Log user in"""
+    """ Log user in """
 
     if request.method == "POST":
 
