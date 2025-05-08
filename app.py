@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect
+from flask import Flask, render_template, session, request, redirect, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine, text
 
@@ -27,18 +27,25 @@ def register():
      # User reached route via POST (as by submitting a register from via POST)
     if request.method == "POST":
 
-        # Get the information from a new user
-        username = request.form.get("username")
-        password = request.form.get("password")
+        data = request.json
 
-        # Validar si existe el usuario en la base de datos
+        # Connect to database
+        conn = db.connect()
 
-        # Ingresar al usuario en la base de datos
+        # Ensure username submitted is unique
+        user = conn.execute(text("SELECT username FROM users WHERE username = :username"), {"username": data['username']}).fetchone()
 
-        # Log In
+        if user:
+            return jsonify({"message": "Existing username. Try another one."}), 400 
+        
+        conn.execute(text("INSERT INTO users (username, password) VALUES (:username, :password)"), {"username": data['username'], "password": data['password']})
+        conn.commit()
 
+        # Disconnect from the database
+        conn.close()
 
-        return redirect("/login")
+        ### REVISAR!!!!
+        return jsonify({"redirect": "/login"}), 201
 
     else:
         return render_template("register.html")

@@ -1,0 +1,41 @@
+app.route("/register", methods=["GET", "POST"])
+def register():
+    """ Register a new user """
+
+     # User reached route via POST (as by submitting a register from via POST)
+    if request.method == "POST":
+
+        # Get the information from a new user
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        # Connect to database
+        conn = db.connect()
+
+        # Ensure username submitted is unique
+        query = conn.execute(text("SELECT COUNT(*) FROM users WHERE username = :username"), {"username": username}).fetchone()
+
+
+
+
+
+
+
+        if query[0]:
+            print("Usuario exixtente")
+        else:
+            print("Nuevo registro")
+
+
+        # Disconnect from the database
+        conn.close()
+
+        # Ingresar al usuario en la base de datos
+
+        # Log In
+
+
+        return redirect("/login")
+
+    else:
+        return render_template("register.html")

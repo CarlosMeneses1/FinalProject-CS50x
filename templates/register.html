@@ -25,39 +25,63 @@
 
     <!-- Error validation logic with alert messages -->
     <script>
-        document.getElementById("register_form").addEventListener("submit", function(event) {
+        document.getElementById("register_form").addEventListener("submit", async function(event) {
+            event.preventDefault()
+
             let username = document.getElementById("username").value.trim();
             let password = document.getElementById("password").value.trim();
             let confirmation = document.getElementById("confirmation").value.trim();
             let error_message = document.getElementById("error_message");
 
             error_message.classList.add("d-none");
+            error_message.classList.remove("alert-success");
+            error_message.classList.add("alert-danger");
             error_message.innerHTML = "";
 
             if (username === "")
             {
-                error_message.innerHTML = "⚠️<strong>Error</strong>: You must enter a <strong>username</strong> to register"
+                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>username</strong> to register"
                 error_message.classList.remove("d-none");
-                event.preventDefault();
+                return;
             }
-            else if (password === "")
+            if (password === "")
             {
-                error_message.innerHTML = "⚠️<strong>Error</strong>: You must enter a <strong>password</strong> to register"
+                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>password</strong> to register"
                 error_message.classList.remove("d-none")
-                event.preventDefault();
+                return;
             }
-            else if (confirmation === "")
+            if (confirmation === "")
             {
-                error_message.innerHTML = "⚠️<strong>Error</strong>: You must enter the <strong>password confirmation</strong> to register"
+                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter the <strong>password confirmation</strong> to register"
                 error_message.classList.remove("d-none")
-                event.preventDefault();
+                return;
             }
-            else if (password !== confirmation)
+            if (password !== confirmation)
             {
-                error_message.innerHTML = "<strong>Passwords do not match</strong>"
+                error_message.innerHTML = "⚠️<strong>Passwords do not match</strong>"
                 error_message.classList.remove("d-none");
-                event.preventDefault();
+                return;
             }
-        })
+
+            let response = await fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+
+            let data = await response.json();
+
+            if (response.ok)
+            {
+                error_message.innerHTML = "✅<strong>User successfully registered</strong>"
+                error_message.classList.remove("d-none");
+                error_message.classList.remove("alert-danger");  
+                error_message.classList.add("alert-success"); 
+            } else 
+            {
+                error_message.innerHTML = `⚠️<strong>Error</strong>: ${data.message}`;
+                error_message.classList.remove("d-none");
+            }
+        });
     </script>
 {% endblock %}
