@@ -38,6 +38,7 @@
             error_message.classList.add("alert-danger");
             error_message.innerHTML = "";
 
+            // Frontend validation: ensuring there are no blank spaces and password validation
             if (username === "")
             {
                 error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>username</strong> to register"
@@ -63,6 +64,7 @@
                 return;
             }
 
+            // Backend validation: Ensure a unique username is registered. Database check.
             let response = await fetch("/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -71,13 +73,13 @@
 
             let data = await response.json();
 
+            // Redirect to route("/") if registered correctly
             if (response.ok)
             {
-                error_message.innerHTML = "✅<strong>User successfully registered</strong>"
-                error_message.classList.remove("d-none");
-                error_message.classList.remove("alert-danger");  
-                error_message.classList.add("alert-success"); 
-            } else 
+                window.location.href = data.redirect_url;
+            } 
+            // Else, error message
+            else 
             {
                 error_message.innerHTML = `⚠️<strong>Error</strong>: ${data.message}`;
                 error_message.classList.remove("d-none");

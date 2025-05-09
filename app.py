@@ -1,6 +1,7 @@
 from flask import Flask, render_template, session, request, redirect, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine, text
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 # Configure application
@@ -17,57 +18,66 @@ db = create_engine("sqlite:///prohabit.db", echo=True)
 
 @app.route("/")
 def index():
-    return redirect("login")
+    return render_template("index.html")
+
+@app.route("/logout")
+def logout():
+    """ Log user out """
+    
+    # Forget any user_id
+    session.clear()
+
+    # Redirect to the route("/login")
+    return redirect("/login")
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """ Register a new user """
 
-     # User reached route via POST (as by submitting a register from via POST)
+    # User reached route via POST (as by submitting a 'register from' via POST)
     if request.method == "POST":
 
-        data = request.json
+        # Get information from the 'register form' to validate a unique username
+        form_data = request.json
 
         # Connect to database
         conn = db.connect()
 
-        # Ensure username submitted is unique
-        user = conn.execute(text("SELECT username FROM users WHERE username = :username"), {"username": data['username']}).fetchone()
+        # Search into the database for the username submitted in the 'register form'
+        user = conn.execute(text("SELECT username FROM users WHERE username = :username"), {"username": form_data['username']}).fetchone()
 
+        # If the submitted username is found in the database, send an error message
         if user:
             return jsonify({"message": "Existing username. Try another one."}), 400 
         
-        conn.execute(text("INSERT INTO users (username, password) VALUES (:username, :password)"), {"username": data['username'], "password": data['password']})
+        # Else, add into the database the new username
+        hash_password = generate_password_hash(form_data['password'])
+
+        conn.execute(text("INSERT INTO users (username, password) VALUES (:username, :password)"), {"username": form_data['username'], "password": hash_password})
         conn.commit()
+
+        # Get the registered user ID and remember it with 'session'
+        user_information = conn.execute(text("SELECT * FROM users WHERE username = :username"), {"username": form_data['username']}).fetchone()
+
+        session["user_id"] = user_information[0]
 
         # Disconnect from the database
         conn.close()
 
-        ### REVISAR!!!!
-        return jsonify({"redirect": "/login"}), 201
+        # Once a new username is added, redirect to the route("/")
+        return jsonify({"success": True, "redirect_url": "/"})
 
+    # User reached route via GET (as by clicking a link or by a redirect)
     else:
         return render_template("register.html")
 
-
-
-    
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """ Log user in """
 
     if request.method == "POST":
-
-        # PRUEBA
-        username = request.form.get("username")
-        password = request.form.get("password")
-        conn = db.connect()
-        conn.execute(text("INSERT INTO users (username, password) VALUES (:username, :password)"), {"username": username, "password": password})
-        conn.commit()
-        conn.close()
-        # PRUEBA
 
         return redirect("/login")
 
