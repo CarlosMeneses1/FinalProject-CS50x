@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <!-- Structure of the registration format -->
+    <!-- Structure of 'register form' -->
     <form action="/register" method="POST" id="register_form">
     
         <div class="alert alert-danger text-center d-none" id="error_message"></div>
@@ -65,12 +65,15 @@
             }
 
             // Backend validation: Ensure a unique username is registered. Database check.
+
+            // Send the form information to validate
             let response = await fetch("/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
             });
 
+            // Get the validation respond
             let data = await response.json();
 
             // Redirect to route("/") if registered correctly

@@ -45,22 +45,22 @@ def register():
         conn = db.connect()
 
         # Search into the database for the username submitted in the 'register form'
-        user = conn.execute(text("SELECT username FROM users WHERE username = :username"), {"username": form_data['username']}).fetchone()
+        user_information = conn.execute(text("SELECT username FROM users WHERE username = :username"), {"username": form_data["username"]}).fetchone()
 
         # If the submitted username is found in the database, send an error message
-        if user:
+        if user_information:
             return jsonify({"message": "Existing username. Try another one."}), 400 
         
         # Else, add into the database the new username
-        hash_password = generate_password_hash(form_data['password'])
+        hash_password = generate_password_hash(form_data["password"])
 
-        conn.execute(text("INSERT INTO users (username, password) VALUES (:username, :password)"), {"username": form_data['username'], "password": hash_password})
+        conn.execute(text("INSERT INTO users (username, password) VALUES (:username, :password)"), {"username": form_data["username"], "password": hash_password})
         conn.commit()
 
         # Get the registered user ID and remember it with 'session'
-        user_information = conn.execute(text("SELECT * FROM users WHERE username = :username"), {"username": form_data['username']}).fetchone()
+        user_id = conn.execute(text("SELECT * FROM users WHERE username = :username"), {"username": form_data["username"]}).fetchone()
 
-        session["user_id"] = user_information[0]
+        session["user_id"] = user_id[0]
 
         # Disconnect from the database
         conn.close()
@@ -77,7 +77,28 @@ def register():
 def login():
     """ Log user in """
 
+    # User reached via POST (as by submitting a 'Log in form' via POST)
     if request.method == "POST":
+
+        # Get the information from 'Log in form' to validate a correct combination of username and password
+        form_data = request.json
+
+        # Connect to data base  
+        conn = db.connect()
+
+        # Search into database the username submitted in the 'log in form'
+        user_information = conn.execute(text("SELECT * FROM users WHERE username = :username"), {"username": form_data["username"]}).fetchone()
+
+        # Validate for existing username in database
+        if not user_information:
+            return jsonify({"message": "Username does not exist"}), 400
+        
+        # Validate for submitted password
+        if not check_password_hash(user_information[2], form_data["password"]):
+            return jsonify({"message": "Incorrect password"}), 400
+
+
+        
 
         return redirect("/login")
 

@@ -5,13 +5,67 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/login" method="POST">
+    <!-- Structure of 'log in form' -->
+    <form action="/login" id="login_form" method="POST">
+
+        <div class="alert alert-danger text-center d-none" id="error_message"></div>
+
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
         </div>
         <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
+            <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
         </div>
         <button class="btn btn-primary" type="submit">Log In</button>
+
+        <!-- Error validation logic with alert messages -->
+        <script>
+            document.getElementById("login_form").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                let username = document.getElementById("username").value.trim();
+                let password = document.getElementById("password").value.trim();
+                let error_message = document.getElementById("error_message");
+
+                error_message.classList.add("d-none");
+                error_message.innerHTML = "";
+
+                // Frontend validation: ensuring there are no blank spaces and password validation
+                if (username === "")
+                {
+                    error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter your <strong>username</strong> to Log In"
+                    error_message.classList.remove("d-none");
+                    return;
+                }
+                if (password === "")
+                {
+                    error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter youer <strong>password</strong> to Log In"
+                    error_message.classList.remove("d-none");
+                    return;
+                }
+
+                // Backend validation:
+                let response = await fetch("/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                })
+
+                let data = await response.json();
+
+                if (response.ok)
+                {
+                    window.location.href = data.redirect_url;
+                }
+                else
+                {
+                    error_message.innerHTML = `⚠️<strong>Error</strong>: ${data.message}`;
+                    error_message.classList.remove("d-none")
+                }
+
+                
+
+            })
+        </script>
     </form>
 {% endblock %}
