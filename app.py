@@ -18,7 +18,11 @@ db = create_engine("sqlite:///prohabit.db", echo=True)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    """ Show your habits """
+    if request.method == "POST":
+        pass
+    else:
+        return render_template("index.html")
 
 @app.route("/logout")
 def logout():
@@ -97,10 +101,14 @@ def login():
         if not check_password_hash(user_information[2], form_data["password"]):
             return jsonify({"message": "Incorrect password"}), 400
 
+        # Log user in
+        session["user_id"] = user_information[0]
 
-        
+        # Disconnect from the database
+        conn.close()
 
-        return redirect("/login")
+        # Once a username log in, redirect to the route("/")
+        return jsonify({"redirect_url": "/"})
 
     else:
         return render_template("login.html")

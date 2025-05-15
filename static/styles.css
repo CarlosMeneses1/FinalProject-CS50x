@@ -1,4 +1,43 @@
-body
-{
-    background-color: #b3cbd2;
+/* Variables CSS */
+:root {
+    --bg-dark: #212529;
+    --text-light: #E9ECEF;
+    --accent-color: #4e4e4e;
+    --border-color: #495057;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: Arial, sans-serif;
+}
+
+button:hover {
+    background-color: #4e4e4e;
+}
+
+/* Form container */
+#habit_block_form {
+    background-color: #2A2F33;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.95);
+    transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
+}
+
+#habit_block_form {
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+#habit_block_form.active {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
 }

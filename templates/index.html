@@ -5,5 +5,24 @@ Home
 {% endblock %}
 
 {% block main %}
-    TODO
+    <!-- Structure of 'new habit form' -->
+    <!-- When the button is click, the 'new habit form' will display -->
+    <button class="btn btn-primary mb-4" id="show_form">Add Habit</button>
+
+    <div class="card shadow p-4 mb-3" id="habit_block_form">
+        <form action="/" id="habit_form" method="POST">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto mb-2" placeholder="Add a new Habit" name="habit" id="habit" type="text">
+            <button class="btn btn-primary mt-2" id="submit_habit" type="submit">Save Habit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("show_form").addEventListener("click", function() {
+            document.getElementById("habit_block_form").classList.toggle("active");
+        })
+
+        
+    </script>
+
+
 {% endblock %}
