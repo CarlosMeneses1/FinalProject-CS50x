@@ -21,6 +21,20 @@ Home
             document.getElementById("habit_block_form").classList.toggle("active");
         })
 
+        document.getElementById("habit_form").addEventListener("submit", async function() {
+            event.preventDefault();
+
+            let habit = document.getElementById("habit").value.trim();
+
+            let response = await fetch("/add_habit", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ habit })
+            })
+            
+        })
+        
+
         
     </script>
 

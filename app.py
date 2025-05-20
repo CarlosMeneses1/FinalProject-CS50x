@@ -15,6 +15,14 @@ Session(app)
 # Connect and configure databases with SQLAlchemy
 db = create_engine("sqlite:///prohabit.db", echo=True)
 
+# Before any request, ensure user session
+@app.before_request
+def require_login():
+    """ Ensure log in by the user """
+    routes = ["/"]
+    if session.get("user_id") is None and request.path in routes:
+        return redirect("/login")
+
 
 @app.route("/")
 def index():
@@ -31,7 +39,7 @@ def logout():
     # Forget any user_id
     session.clear()
 
-    # Redirect to the route("/login")
+    # Redirect to route("/login")
     return redirect("/login")
 
 
@@ -112,6 +120,11 @@ def login():
 
     else:
         return render_template("login.html")
+
+@app.route("/add_habit")
+def add_habit():
+
+    data_habit = request.json
  
 
 if __name__ == '__main__':
