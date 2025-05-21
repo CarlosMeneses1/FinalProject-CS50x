@@ -10,31 +10,98 @@ Home
     <button class="btn btn-primary mb-4" id="show_form">Add Habit</button>
 
     <div class="card shadow p-4 mb-3" id="habit_block_form">
+
         <form action="/" id="habit_form" method="POST">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto mb-2" placeholder="Add a new Habit" name="habit" id="habit" type="text">
-            <button class="btn btn-primary mt-2" id="submit_habit" type="submit">Save Habit</button>
+
+            <div class="alert alert-danger text-center d-none" id="error_message"></div>
+
+            <div class="row d-flex align-items-center justify-content-start g-3">
+                
+                <div class="col">
+                    <input autocomplete="off" autofocus class="form-control" placeholder="Add a new Habit" name="habit" id="habit" type="text">
+                </div>
+                <div class="col">
+                    <select class="form-select" id="frequency">
+                        <option value="" selected disabled>Frecuency</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input autocomplete="off" class="form-control" placeholder="Times" name="times" id="times" type="number" min="1">
+                </div>
+            </div>
+
+            <div class="text-center mt-2">
+                <button class="btn btn-primary mt-2" id="submit_habit" type="submit">Save Habit</button>
+            </div>
         </form>
+
     </div>
 
     <script>
+        // Display the 'habit form' after clicking the button
         document.getElementById("show_form").addEventListener("click", function() {
             document.getElementById("habit_block_form").classList.toggle("active");
         })
 
-        document.getElementById("habit_form").addEventListener("submit", async function() {
+        // Error validation and submit form information in database
+        document.getElementById("habit_form").addEventListener("submit", async function(event) {
             event.preventDefault();
 
             let habit = document.getElementById("habit").value.trim();
+            let frequency = document.getElementById("frequency").value.trim();
+            let times = document.getElementById("times").value.trim();
+            let error_message = document.getElementById("error_message");
 
+            error_message.classList.add("d-none");
+            error_message.classList.add("alert-danger");
+            error_message.innerHTML = "";
+
+            // Frontend validation: ensuring there are no blank spaces
+            if (habit === "")
+            {
+                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>habit description</strong>"
+                error_message.classList.remove("d-none");
+                return;
+            }
+            if (frequency === "")
+            {
+                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>frecuency</strong>"
+                error_message.classList.remove("d-none");
+                return;
+            }
+            if (times === "")
+            {
+                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter the <strong>number of times</strong> you perform the habit."
+                error_message.classList.remove("d-none");
+                return;
+            }
+
+            // Backend: Add the information to the database
+            // Send the form information to validate
             let response = await fetch("/add_habit", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ habit })
+                body: JSON.stringify({ habit, frequency, times })
             })
-            
-        })
-        
 
+             // Get the validation respond
+            let data = await response.json();
+
+            // Recargue la página si el hábito se agregó correctamente
+            if (response.ok)
+            {
+                ;
+            } 
+            // Else, error message
+            else 
+            {
+                error_message.innerHTML = `⚠️<strong>Error</strong>: ${data.message}`;
+                error_message.classList.remove("d-none");
+            }
+        })
         
     </script>
 
