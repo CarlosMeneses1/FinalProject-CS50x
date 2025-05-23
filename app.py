@@ -19,7 +19,8 @@ db = create_engine("sqlite:///prohabit.db", echo=True)
 @app.before_request
 def require_login():
     """ Ensure log in by the user """
-    routes = ["/"]
+
+    routes = ["/", "/add_habit"]
     if session.get("user_id") is None and request.path in routes:
         return redirect("/login")
 
@@ -27,10 +28,21 @@ def require_login():
 @app.route("/")
 def index():
     """ Show your habits """
-    if request.method == "POST":
-        pass
-    else:
-        return render_template("index.html")
+
+    # User reached route via GET (as by clicking a link or by redirect)
+
+    # Connect to database
+    conn = db.connect()
+
+    # Search for user habits
+    user_habits = conn.execute(text("SELECT * FROM habits WHERE user_id = :user_id"), {"user_id": session["user_id"]}).mappings().fetchall()
+
+    for habit in user_habits:
+        print(habit["habit"])
+        print(habit["frequency"])
+        print(habit["times"])
+
+    return render_template("index.html")
 
 @app.route("/logout")
 def logout():
@@ -95,7 +107,7 @@ def login():
         # Get the information from 'Log in form' to validate a correct combination of username and password
         form_data = request.json
 
-        # Connect to data base  
+        # Connect to database  
         conn = db.connect()
 
         # Search into database the username submitted in the 'log in form'
@@ -121,10 +133,23 @@ def login():
     else:
         return render_template("login.html")
 
-@app.route("/add_habit")
+@app.route("/add_habit", methods=["POST"])
 def add_habit():
 
+    # Get the information from 'habit form' to add it into the database
     data_habit = request.json
+
+    # Connect to database
+    conn = db.connect()
+
+    # Add information into the database
+    conn.execute(text("INSERT INTO habits (habit, frequency, times, user_id) VALUES (:habit, :frequency, :times, :user_id)"), {"habit": data_habit["habit"], "frequency": data_habit["frequency"], "times": data_habit["times"], "user_id": session["user_id"]})
+    conn.commit()
+
+    # Dissconect from database
+    conn.close()
+
+    return jsonify({"success": True}), 200
  
 
 if __name__ == '__main__':

@@ -5,10 +5,10 @@ Home
 {% endblock %}
 
 {% block main %}
-    <!-- Structure of 'new habit form' -->
     <!-- When the button is click, the 'new habit form' will display -->
     <button class="btn btn-primary mb-4" id="show_form">Add Habit</button>
 
+    <!-- Structure of 'new habit form' -->
     <div class="card shadow p-4 mb-3" id="habit_block_form">
 
         <form action="/" id="habit_form" method="POST">
@@ -38,6 +38,24 @@ Home
             </div>
         </form>
 
+    </div>
+
+    <!-- Structure of habits table -->
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Habit</th>
+                    <th>Frequency</th>
+                    <th>Times</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hola</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -93,7 +111,7 @@ Home
             // Recargue la página si el hábito se agregó correctamente
             if (response.ok)
             {
-                ;
+                window.location.reload();
             } 
             // Else, error message
             else 
