@@ -34,15 +34,13 @@ def index():
     # Connect to database
     conn = db.connect()
 
-    # Search for user habits
+    # 1. Get user habits information
     user_habits = conn.execute(text("SELECT * FROM habits WHERE user_id = :user_id"), {"user_id": session["user_id"]}).mappings().fetchall()
 
-    for habit in user_habits:
-        print(habit["habit"])
-        print(habit["frequency"])
-        print(habit["times"])
+    # 2. Get 'completed times' of a habit
 
-    return render_template("index.html")
+    return render_template("index.html", user_habits=user_habits)
+
 
 @app.route("/logout")
 def logout():
@@ -133,6 +131,7 @@ def login():
     else:
         return render_template("login.html")
 
+
 @app.route("/add_habit", methods=["POST"])
 def add_habit():
 
@@ -150,7 +149,7 @@ def add_habit():
     conn.close()
 
     return jsonify({"success": True}), 200
- 
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)

@@ -42,18 +42,30 @@ Home
 
     <!-- Structure of habits table -->
     <div>
-        <table>
-            <thead>
+        <table class="table table-striped table-hover">
+            <thead class="table-primary">
                 <tr>
                     <th>Habit</th>
                     <th>Frequency</th>
-                    <th>Times</th>
+                    <th>Times Required</th>
+                    <th>Times Completed</th>
+                    <th>Status</th>
+                    <th>Completed</th>
                 </tr>
             </thead>
             <tbody>
+                {% for habit in user_habits %}
                 <tr>
-                    <td>Hola</td>
+                    <td> {{ habit.habit }} </td>
+                    <td> {{ habit.frequency }} </td>
+                    <td> {{ habit.times }} </td>
+                    <td> Times Completed </td>
+                    <td> Status </td>
+                    <td>
+                        <button class="mark-btn" data-habit-id="{{ habit.id }}">Completed</button>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
