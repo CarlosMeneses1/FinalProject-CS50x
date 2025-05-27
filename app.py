@@ -38,8 +38,9 @@ def index():
     user_habits = conn.execute(text("SELECT * FROM habits WHERE user_id = :user_id"), {"user_id": session["user_id"]}).mappings().fetchall()
 
     # 2. Get 'completed times' of a habit
+    track_habit = conn.execute(text("SELECT habit_id, COUNT(*) AS completed FROM users JOIN habits ON users.id = habits.user_id JOIN habit_logs ON habits.id = habit_logs.habit_id WHERE users.id = :user_id GROUP BY habit_logs.habit_id"), {"user_id": session["user_id"]}).mappings().fetchall()
 
-    return render_template("index.html", user_habits=user_habits)
+    return render_template("index.html", user_habits=user_habits, track_habit=track_habit)
 
 
 @app.route("/logout")
@@ -148,6 +149,25 @@ def add_habit():
     # Dissconect from database
     conn.close()
 
+    return jsonify({"success": True}), 200
+
+
+@app.route("/track_habit", methods=["POST"])
+def track_habit():
+
+    # Get the information from 'habit form' to add it into the database
+    track_habit = request.json
+
+    # Connect to database
+    conn = db.connect()
+
+    # Add information into the database
+    conn.execute(text("INSERT INTO habit_logs (habit_id, date, completed) VALUES (:habit_id, DATE('now'), TRUE)"), {"habit_id": track_habit["habit_id"], })
+    conn.commit()
+
+    # Dissconect from database
+    conn.close()
+    
     return jsonify({"success": True}), 200
 
 

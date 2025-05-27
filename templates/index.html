@@ -120,19 +120,26 @@ Home
              // Get the validation respond
             let data = await response.json();
 
-            // Recargue la página si el hábito se agregó correctamente
+            // Reload the page if the habit was added successfully
             if (response.ok)
             {
                 window.location.reload();
             } 
-            // Else, error message
-            else 
-            {
-                error_message.innerHTML = `⚠️<strong>Error</strong>: ${data.message}`;
-                error_message.classList.remove("d-none");
-            }
         })
-        
+
+        // Logic for 'habit completed'
+        // Get and submit the 'habit id' completed
+        document.querySelectorAll(".mark-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                let habit_id = this.getAttribute("data-habit-id");
+
+                fetch("/track_habit", {
+                    "method": "POST",
+                    "headers": { "Content-Type": "application/json" },
+                    "body": JSON.stringify({ habit_id })
+                });
+            });
+        });        
     </script>
 
 
