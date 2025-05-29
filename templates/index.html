@@ -59,7 +59,10 @@ Home
                     <td> {{ habit.habit }} </td>
                     <td> {{ habit.frequency }} </td>
                     <td> {{ habit.times }} </td>
-                    <td> Times Completed </td>
+
+                    {% set track = track_habit | selectattr('habit_id', 'equalto', habit.id) | first %}
+                    <td> {{ track.completed if track else 0 }} </td>
+
                     <td> Status </td>
                     <td>
                         <button class="mark-btn" data-habit-id="{{ habit.id }}">Completed</button>
@@ -138,6 +141,8 @@ Home
                     "headers": { "Content-Type": "application/json" },
                     "body": JSON.stringify({ habit_id })
                 });
+
+                window.location.reload();
             });
         });        
     </script>

@@ -1,0 +1,19 @@
+{% for habit in user_habits %}
+                <tr>
+                    <td> {{ habit.habit }} </td>
+                    <td> {{ habit.frequency }} </td>
+                    <td> {{ habit.times }} </td>
+
+                    {% if habit.id in track_habit | map(attribute='habit_id') %}
+                        <td> {{ track_habit[habit.id]["completed"] }} </td>
+                    {% else %}
+                        <td> 0 </td>
+                    {% endif %}
+
+
+                    <td> Status </td>
+                    <td>
+                        <button class="mark-btn" data-habit-id="{{ habit.id }}">Completed</button>
+                    </td>
+                </tr>
+                {% endfor %}
