@@ -5,147 +5,204 @@ Home
 {% endblock %}
 
 {% block main %}
-    <!-- When the button is click, the 'new habit form' will display -->
-    <button class="btn btn-primary mb-4" id="show_form">Add Habit</button>
+<!-- When the button is click, the 'new habit form' will display -->
+<button class="btn btn-primary mb-4" id="show_form">Add Habit</button>
 
-    <!-- Structure of 'new habit form' -->
-    <div class="card shadow p-4 mb-3" id="habit_block_form">
-
-        <form action="/" id="habit_form" method="POST">
-
-            <div class="alert alert-danger text-center d-none" id="error_message"></div>
-
-            <div class="row d-flex align-items-center justify-content-start g-3">
-                
-                <div class="col">
-                    <input autocomplete="off" autofocus class="form-control" placeholder="Add a new Habit" name="habit" id="habit" type="text">
-                </div>
-                <div class="col">
-                    <select class="form-select" id="frequency">
-                        <option value="" selected disabled>Frecuency</option>
-                        <option value="Daily">Daily</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="Monthly">Monthly</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <input autocomplete="off" class="form-control" placeholder="Times" name="times" id="times" type="number" min="1">
-                </div>
+<!-- Structure of 'new habit form' -->
+<div class="card shadow p-4 mb-3" id="habit_block_form">
+    <form action="/" id="habit_form" method="POST">
+        <div class="alert alert-danger text-center d-none" id="error_message"></div>
+        <div class="row d-flex align-items-center justify-content-start g-3">
+            <div class="col">
+                <input autocomplete="off" autofocus class="form-control" placeholder="Add a new Habit" name="habit" id="habit" type="text">
             </div>
-
-            <div class="text-center mt-2">
-                <button class="btn btn-primary mt-2" id="submit_habit" type="submit">Save Habit</button>
+            <div class="col">
+                <select class="form-select" id="frequency">
+                    <option value="" selected disabled>Frecuency</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                </select>
             </div>
-        </form>
+            <div class="col">
+                <input autocomplete="off" class="form-control" placeholder="Times" name="times" id="times" type="number" min="1">
+            </div>
+        </div>
+        <div class="text-center mt-2">
+            <button class="btn btn-primary mt-2" id="submit_habit" type="submit">Save Habit</button>
+        </div>
+    </form>
+</div>
 
-    </div>
+<!-- Structure of habits table -->
+<div>
+    <table class="table table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>Habit</th>
+                <th>Frequency</th>
+                <th>Times Required</th>
+                <th>Times Completed</th>
+                <th>Completed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for habit in user_habits %}
+            <tr>
+                <td>{{ habit.habit }}</td>
+                <td>{{ habit.frequency }}</td>
+                <td>{{ habit.times }}</td>
+                {% set track = track_habit | selectattr('habit_id', 'equalto', habit.id) | first %}
+                <td>{{ track.completed if track else 0 }}</td>
+                <td>
+                    <button class="mark-btn" data-habit-id="{{ habit.id }}">Completed</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-    <!-- Structure of habits table -->
-    <div>
-        <table class="table table-striped table-hover">
-            <thead class="table-primary">
-                <tr>
-                    <th>Habit</th>
-                    <th>Frequency</th>
-                    <th>Times Required</th>
-                    <th>Times Completed</th>
-                    <th>Status</th>
-                    <th>Completed</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for habit in user_habits %}
-                <tr>
-                    <td> {{ habit.habit }} </td>
-                    <td> {{ habit.frequency }} </td>
-                    <td> {{ habit.times }} </td>
+<script>
+    // 1. Display the 'habit form' after clicking the button
+    document.getElementById("show_form").addEventListener("click", function() {
+        document.getElementById("habit_block_form").classList.toggle("active");
+    });
 
-                    {% set track = track_habit | selectattr('habit_id', 'equalto', habit.id) | first %}
-                    <td> {{ track.completed if track else 0 }} </td>
+    // 2. Error validation and submit form information in database
+    document.getElementById("habit_form").addEventListener("submit", async function(event) {
+        event.preventDefault();
 
-                    <td> Status </td>
-                    <td>
-                        <button class="mark-btn" data-habit-id="{{ habit.id }}">Completed</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        let habit = document.getElementById("habit").value.trim();
+        let frequency = document.getElementById("frequency").value.trim();
+        let times = document.getElementById("times").value.trim();
+        let error_message = document.getElementById("error_message");
 
-    <script>
-        // Display the 'habit form' after clicking the button
-        document.getElementById("show_form").addEventListener("click", function() {
-            document.getElementById("habit_block_form").classList.toggle("active");
-        })
+        error_message.classList.add("d-none");
+        error_message.classList.add("alert-danger");
+        error_message.innerHTML = "";
 
-        // Error validation and submit form information in database
-        document.getElementById("habit_form").addEventListener("submit", async function(event) {
-            event.preventDefault();
+        // Frontend validation: ensuring there are no blank spaces
+        if (habit === "") {
+            error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>habit description</strong>";
+            error_message.classList.remove("d-none");
+            return;
+        }
+        if (frequency === "") {
+            error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>frequency</strong>";
+            error_message.classList.remove("d-none");
+            return;
+        }
+        if (times === "") {
+            error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter the <strong>number of times</strong> you perform the habit.";
+            error_message.classList.remove("d-none");
+            return;
+        }
 
-            let habit = document.getElementById("habit").value.trim();
-            let frequency = document.getElementById("frequency").value.trim();
-            let times = document.getElementById("times").value.trim();
-            let error_message = document.getElementById("error_message");
+        // Backend: Add the information to the database
+        // Send the form information to validate
+        let response = await fetch("/add_habit", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ habit, frequency, times })
+        });
 
-            error_message.classList.add("d-none");
-            error_message.classList.add("alert-danger");
-            error_message.innerHTML = "";
+        let data = await response.json();
+        if (response.ok) {
+            window.location.reload();
+        }
+    });
 
-            // Frontend validation: ensuring there are no blank spaces
-            if (habit === "")
-            {
-                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>habit description</strong>"
-                error_message.classList.remove("d-none");
-                return;
+    // 3. Logic for 'habits completed'
+    // Calculated the ramainig time
+    function remaining_time_for_row(row) {
+        const frequency = row.cells[1].textContent.trim();
+        const habitId = row.querySelector('.mark-btn').getAttribute('data-habit-id');
+        let periodStartStr = localStorage.getItem("habit_" + habitId + "_start");
+        let periodStart;
+
+        if (!periodStartStr) {
+            periodStart = new Date();
+            localStorage.setItem("habit_" + habitId + "_start", periodStart.toISOString());
+        } 
+        else {
+            periodStart = new Date(periodStartStr);
+        }
+
+        let periodEnd;
+        if (frequency.toLowerCase() === "daily") {
+            periodEnd = new Date(periodStart.getFullYear(), periodStart.getMonth(), periodStart.getDate() + 1);
+        } 
+        else if (frequency.toLowerCase() === "weekly") {
+            let day = periodStart.getDay();
+            let daysToNextMonday = (8 - day) % 7;
+            if (daysToNextMonday === 0) { daysToNextMonday = 7; }
+            periodEnd = new Date(periodStart.getFullYear(), periodStart.getMonth(), periodStart.getDate() + daysToNextMonday);
+        } 
+        else if (frequency.toLowerCase() === "monthly") {
+            periodEnd = new Date(periodStart.getFullYear(), periodStart.getMonth() + 1, 1);
+        }
+        const now = new Date();
+        return periodEnd.getTime() - now.getTime();
+    }
+
+    // Assessment of habit status
+    function reset_habit(row) {
+        const frequency = row.cells[1].textContent.trim();
+        const times_required = parseInt(row.cells[2].textContent);
+        const times_completed = row.cells[3];
+        const button = row.querySelector(".mark-btn");
+        const habitId = row.querySelector('.mark-btn').getAttribute('data-habit-id');
+
+        let time_out = remaining_time_for_row(row);
+
+        if (time_out <= 0) {
+            let current = parseInt(times_completed.textContent) || 0;
+            if (current < times_required) {
+                alert("You did not complete the habit");
+                times_completed.textContent = "0";
+                row.classList.remove("table-success");
+                if (button) button.disabled = false;
             }
-            if (frequency === "")
-            {
-                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter a <strong>frecuency</strong>"
-                error_message.classList.remove("d-none");
-                return;
-            }
-            if (times === "")
-            {
-                error_message.innerHTML = "⚠️<strong>Error:</strong> You must enter the <strong>number of times</strong> you perform the habit."
-                error_message.classList.remove("d-none");
-                return;
-            }
+            localStorage.setItem("habit_" + habitId + "_start", new Date().toISOString());
+            time_out = remaining_time_for_row(row);
+        }
+        setTimeout(function() {
+            reset_habit(row);
+        }, time_out);
+    }
 
-            // Backend: Add the information to the database
-            // Send the form information to validate
-            let response = await fetch("/add_habit", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ habit, frequency, times })
-            })
+    // Logic for marking the habit as completed
+    document.querySelectorAll(".mark-btn").forEach(button => {
+        button.addEventListener("click", async function() {
+            let habit_id = this.getAttribute("data-habit-id");
+            const row = this.closest("tr");
+            const times_required = parseInt(row.cells[2].textContent);
+            let times_completed = row.cells[3];
+            let current = parseInt(times_completed.textContent) || 0;
 
-             // Get the validation respond
-            let data = await response.json();
-
-            // Reload the page if the habit was added successfully
-            if (response.ok)
-            {
-                window.location.reload();
-            } 
-        })
-
-        // Logic for 'habit completed'
-        // Get and submit the 'habit id' completed
-        document.querySelectorAll(".mark-btn").forEach(button => {
-            button.addEventListener("click", function() {
-                let habit_id = this.getAttribute("data-habit-id");
-
-                fetch("/track_habit", {
-                    "method": "POST",
-                    "headers": { "Content-Type": "application/json" },
-                    "body": JSON.stringify({ habit_id })
+            try {
+                let response = await fetch("/track_habit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ habit_id })
                 });
+                current++;
+                times_completed.textContent = current;
 
-                window.location.reload();
-            });
-        });        
-    </script>
+                if (current >= times_required) {
+                    row.classList.add("table-success");
+                    this.disabled = true;
+                }
+            } catch (error) {
+                console.error("Error updating habit:", error);
+            }
+        });
+    });
 
-
+    // Reset of each habit
+    document.querySelectorAll("table tbody tr").forEach(row => {
+        reset_habit(row);
+    });
+</script>
 {% endblock %}
