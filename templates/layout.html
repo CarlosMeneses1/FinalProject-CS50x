@@ -31,12 +31,6 @@
             
                 <!-- If someone is logged in, shows a option menu in navbar -->
                 {% if session["user_id"] %}
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#">Add Habit</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Progress</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-                </ul>
-
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="/logout">Log out</a></li>
                 </ul>
@@ -51,10 +45,10 @@
             </div>
         </div>
     </nav>
-</body>
 
-<main class="container py-5 text-center">
-    {% block main %}{% endblock %}
-</main>
+    <main class="container py-5 text-center">
+        {% block main %}{% endblock %}
+    </main>
+</body>
 
 </html>
