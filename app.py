@@ -20,7 +20,7 @@ db = create_engine("sqlite:///prohabit.db", echo=True)
 def require_login():
     """ Ensure log in by the user """
 
-    routes = ["/", "/add_habit"]
+    routes = ["/", "/add_habit", "/track_habit"]
     if session.get("user_id") is None and request.path in routes:
         return redirect("/login")
 
@@ -135,6 +135,7 @@ def login():
 
 @app.route("/add_habit", methods=["POST"])
 def add_habit():
+    """ Add new habits into database """
 
     # Get the information from 'habit form' to add it into the database
     data_habit = request.json
@@ -154,6 +155,7 @@ def add_habit():
 
 @app.route("/track_habit", methods=["POST"])
 def track_habit():
+    """ Update the database when a habit is completed """
 
     # Get the information from 'habit form' to add it into the database
     track_habit = request.json
