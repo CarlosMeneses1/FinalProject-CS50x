@@ -17,13 +17,16 @@ My goal in creating **ProHabit** was to achieve a **simple, customizable, and fu
 ## :open_file_folder: Project Structure
 
 ### Frontend: HTML, CSS, JavaScript
+<div align="left">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" height="40" alt="html5 logo"  />
   <img width="12" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" height="40" alt="css3 logo"  />
   <img width="12" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="40" alt="javascript logo"  />
+  <img width="12" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" height="40" alt="bootstrap logo"  />
   <img width="12" />
+</div>
 
 ProHabit's frontend is designed to provide an intuitive and dynamic user experience.
 
@@ -39,10 +42,12 @@ ProHabit's frontend is designed to provide an intuitive and dynamic user experie
 ---
 
 ### Backend: Python and Flask
+<div align="left">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="40" alt="python logo"  />
   <img width="12" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" height="40" alt="flask logo"  />
   <img width="12" />
+</div>
 
 ProHabit's backend is the application's engine, managing logic, storage, and data processing.
 
@@ -77,7 +82,5 @@ This database contains **three interconnected tables** that manage each user's d
 If you have any questions or suggestions, contact me at
 
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=flat&logo=gmail&logoColor=white)](mailto:javier.alvarado3011@gmail.com) javier.alvarado3011@gmail.com
-
-<br>
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/carlos-menesess/)
