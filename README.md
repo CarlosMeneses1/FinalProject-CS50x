@@ -56,7 +56,11 @@ ProHabit's backend is the application's engine, managing logic, storage, and dat
 ---
 
 ### Data Storage: SQL
+<div alingn="left">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" height="40" alt="sqlite logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlalchemy/sqlalchemy-original.svg" height="40" alt="sqlalchemy logo"  />
+</div>
 
 #### **ProHabit.db**: Database Structure
 This database contains **three interconnected tables** that manage each user's data and personalize their experience.
