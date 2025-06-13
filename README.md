@@ -34,7 +34,7 @@ ProHabit's frontend is designed to provide an intuitive and dynamic user experie
 - `login.html`: This is the first page rendered when you access the application. It presents a simple form for entering your username and password. It includes a navigation bar with options like **Register, Login**, and **Home Page**.
 - `register.html`: A form designed for new user registration. It incorporates security validations to prevent duplicate usernames and confirm passwords. Once successfully registered, the user is automatically logged in.
 - `index.html`: The main page of the web application. It dynamically displays a form to add new habits. Additionally, it shows a table with all the habits the user wants to track, along with a button for each habit to click every time a habit is completed at the established frequency. Once a habit is completed, it will be locked and highlighted in green, indicating its fulfillment.
-- `Layout.html`: Serves as the basic structure for the rest of the templates. It's called in every template rendered in the application to maintain a standard format and functionalities throughout the project.
+- `layout.html`: Serves as the basic structure for the rest of the templates. It's called in every template rendered in the application to maintain a standard format and functionalities throughout the project.
 
 #### Static
 - `styles.css`: This file defines the visual appearance of the entire application, adding styles and elegant dynamism to some of the application's functions.
