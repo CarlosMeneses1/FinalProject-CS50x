@@ -81,6 +81,5 @@ This database contains **three interconnected tables** that manage each user's d
 ## :iphone: Contact
 If you have any questions or suggestions, contact me at
 
-[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=flat&logo=gmail&logoColor=white)](mailto:javier.alvarado3011@gmail.com) javier.alvarado3011@gmail.com
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/carlos-menesess/)
+- **Gmail:** javier.alvarado3011@gmail.com
+- **LinkedIn:** www.linkedin.com/in/carlos-menesess
